@@ -5,10 +5,12 @@
   ansible.builtin.uri: 
     url: https://metadata.platformequinix.com/metadata
   register: r_metadata
+  when: cloud_provider == 'equinix_metal'
 
 - name: Set a variable for the server region (us, eu, ap)
   set_fact: 
     server_region: "{{ regions[r_metadata.json.metro] | default('us') }}"
+  when: cloud_provider == 'equinix_metal'
 
 - name: restart libvirtd
   service: name=libvirtd state=restarted
